@@ -5,18 +5,20 @@ import java.net.*;
 
 public final class Server {
     private ServerSocket serverSocket = null;
+    private File folder = null;
 
-    public Server(int port) throws IOException {
+    public Server(int port, File folder) throws IOException {
         serverSocket = new ServerSocket(port);
+        this.folder = folder;
     }
 
     public void handleRequests() throws IOException {
-        System.out.println("Simple Http Server v1.0: Ready to handle incoming requests.");
+        System.out.println("Simple File Sharing Server v1.0");
 
         // repeatedly handle incoming requests
         while(true) {
             Socket socket = serverSocket.accept();
-            Thread handlerThread = new Thread(new RequestHandler(socket, null)); //added null to get program to run, check what u meant andrei
+            Thread handlerThread = new Thread(new RequestHandler(socket, folder));
             handlerThread.start();
         }
     }
@@ -26,7 +28,11 @@ public final class Server {
         if (args.length > 0)
             port = Integer.parseInt(args[0]);
         try {
-            Server server = new Server(port);
+            File folder = new File ("./shared_files");
+            if (!folder.exists()) {
+                folder.mkdir();
+            }
+            Server server = new Server(port, folder);
             server.handleRequests();
         } catch (IOException e) {
             e.printStackTrace();

@@ -50,7 +50,7 @@ public final class RequestHandler implements Runnable{
             if (folder.isDirectory()) {
                 File[] listOfFiles = folder.listFiles();
                 for (int i = 0; i < listOfFiles.length; i++) {
-                    requestOutput.writeChars(listOfFiles[i].getName() + "/n");
+                    requestOutput.writeChars(listOfFiles[i].getName() + "/r/n");
                 }
 
                 requestOutput.flush();
@@ -82,7 +82,7 @@ public final class RequestHandler implements Runnable{
                 Scanner readFile = new Scanner(downFile);
                 String line;
                 while ((line = readFile.nextLine()) != null) {
-                    requestOutput.writeChars(line + "/n");
+                    requestOutput.writeChars(line + "/r/n");
                 }
 
                 readFile.close();
