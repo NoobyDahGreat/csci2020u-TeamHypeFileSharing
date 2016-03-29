@@ -1,7 +1,5 @@
 package sample;
 
-import javafx.stage.Screen;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
@@ -14,6 +12,7 @@ public final class RequestHandler implements Runnable{
     private BufferedReader requestInput = null;
     private DataOutputStream requestOutput = null;
     private File folder;
+    private String delim = "\r\n";
 
 
     public RequestHandler (Socket socket, File folder) {
@@ -23,7 +22,7 @@ public final class RequestHandler implements Runnable{
             requestInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             requestOutput = new DataOutputStream(socket.getOutputStream());
         } catch (IOException e) {
-            System.err.println("Server Error while processing new socket\r\n");
+            System.err.println("Server Error while processing new socket" + delim);
             e.printStackTrace();
         }
     }
@@ -50,7 +49,7 @@ public final class RequestHandler implements Runnable{
             if (folder.isDirectory()) {
                 File[] listOfFiles = folder.listFiles();
                 for (int i = 0; i < listOfFiles.length; i++) {
-                    requestOutput.writeChars(listOfFiles[i].getName() + "/r/n");
+                    requestOutput.writeChars(listOfFiles[i].getName() + delim);
                 }
 
                 requestOutput.flush();
@@ -82,7 +81,7 @@ public final class RequestHandler implements Runnable{
                 Scanner readFile = new Scanner(downFile);
                 String line;
                 while ((line = readFile.nextLine()) != null) {
-                    requestOutput.writeChars(line + "/r/n");
+                    requestOutput.writeChars(line + delim);
                 }
 
                 readFile.close();
