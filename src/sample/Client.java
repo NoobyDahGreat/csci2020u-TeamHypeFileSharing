@@ -10,27 +10,36 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.File;
+
 public class Client extends Application {
     private static String[] cmdArgs;
     private BorderPane layout;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+        File resource = new File("./resources");
+        if (!resource.exists()) {
+          resource.mkdir();
+        }
+
         Group root = new Group();
         Scene scene = new Scene(root, 300, 275);
         primaryStage.setTitle("File Sharer v1.0");
 
-
+        //uncomment when ready for final product
+        /*
         if (cmdArgs.length == 0) {
             System.exit(0);
-        }
+        }*/
 
         String computerName;
         String path;
+        /*
         if (cmdArgs.length > 0) {
             computerName = cmdArgs[0];
             path = cmdArgs[1];
-        }
+        }*/
 
 
 
