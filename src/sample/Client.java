@@ -17,7 +17,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.Observable;
 
 public class Client extends Application {
@@ -47,8 +51,41 @@ public class Client extends Application {
             computerName = cmdArgs[0];
             path = cmdArgs[1];
         }*/
+        Socket socket;
+        BufferedReader in;
+        PrintWriter out;
 
-        layout = new BorderPane();
+        try {
+            // connect to the server (3-way connection establishment handshake)
+            socket = new Socket("127.0.0.1", 8080);
+
+            // wrap the input streams into readers and writers
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            out = new PrintWriter(socket.getOutputStream());
+
+            // send the HTTP request GET /yahoo/yahoo.html HTTP/1.0\n\n
+            String request = "DIR";
+            String delim = "\r\n";
+            out.print(request + delim );
+            out.flush();
+
+            // read and print the response
+            String response;
+            System.out.println("Response:");
+            while ((response = in.readLine()) != null) {
+                System.out.println(response);
+            }
+
+            // close the connection (3-way tear down handshake)
+            out.close();
+            in.close();
+            socket.close();
+        } catch (Exception e) {
+            System.out.println(e);
+            e.printStackTrace();
+        }
+
+
         summary = new GridPane();
 
 
@@ -57,23 +94,32 @@ public class Client extends Application {
         summary.setHgap(3);
 
         clientList = new ListView();
-        ObservableList<String> items = FXCollections.observableArrayList();
-        File dir = new File("args[1]");
-        File[] list = dir.listFiles();
-
-        for(int i =0; i < list.length; i++){
-            if(list[i].isFile()){
-                if(list[i].getName().endsWith(".txt")){
-                    items.add(list[i].getName());
-                }
-            }
-        }
+        ObservableList<String> items = FXCollections.observableArrayList("Sup", "Nerd");
+//        File dir = new File("args[1]");
+//        File[] list = dir.listFiles();
+//
+//        for(int i =0; i < list.length; i++){
+//            if(list[i].isFile()){
+//                if(list[i].getName().endsWith(".txt")){
+//                    items.add(list[i].getName());
+//                }
+//            }
+//        }
 
         clientList.setItems(items);
         clientList.setPrefWidth(200);
         clientList.setPrefHeight(400);
+        summary.add(clientList, 0, 1);
+
+        String item = clientList.getSelectionModel().getSelectedItem();
+
+        serverList = new ListView();
 
 
+        serverList.setItems(null);
+        serverList.setPrefHeight(400);
+        serverList.setPrefWidth(200);
+        summary.add(serverList, 1, 1);
 
         download = new Button("Download");
         download.setOnAction(new EventHandler<ActionEvent>() {
@@ -94,8 +140,14 @@ public class Client extends Application {
         summary.add(upload, 1, 0);
 
 
+
+        layout = new BorderPane();
+        layout.setCenter(summary);
+
+
+
         Group root = new Group();
-        Scene scene = new Scene(root, 300, 275);
+        Scene scene = new Scene(layout, 500, 475);
         primaryStage.setTitle("File Sharer v1.0");
 
 
@@ -110,6 +162,7 @@ public class Client extends Application {
 
 
     public static void main(String[] args) {
+
         cmdArgs = args;
         launch(args);
     }
