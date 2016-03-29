@@ -16,7 +16,7 @@ public final class Server {
         // repeatedly handle incoming requests
         while(true) {
             Socket socket = serverSocket.accept();
-            Thread handlerThread = new Thread(new RequestHandler(socket));
+            Thread handlerThread = new Thread(new RequestHandler(socket, null)); //added null to get program to run, check what u meant andrei
             handlerThread.start();
         }
     }
