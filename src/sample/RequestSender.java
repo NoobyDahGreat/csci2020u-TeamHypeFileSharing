@@ -37,9 +37,10 @@ public class RequestSender {
 
     public void download(String path) {
         try {
-            File temp = new File(path);
+            File temp = new File(localDir + "/" + path);
             if (!temp.exists()) {
                 System.out.println("File does not e");
+                System.out.println(localDir);
             }
 
             request = "DOWNLOAD " + path;
@@ -48,7 +49,7 @@ public class RequestSender {
             out.flush();
 
             String response;
-            FileWriter fstream = new FileWriter(localDir + temp.getName(), true);
+            FileWriter fstream = new FileWriter(temp);
             BufferedWriter transfer = new BufferedWriter(fstream);
             System.out.println("Response:");
             while ((response = in.readLine()) != null) {
