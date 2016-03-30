@@ -66,6 +66,7 @@ public final class RequestHandler implements Runnable{
                         FileWriter newFile = new FileWriter(upFile);
                         String line;
                         while ((line = requestInput.readLine()) != null) {
+                            System.out.println(line);
                             newFile.write(line + "\r\n");
                             System.out.println(line);
                         }
@@ -83,6 +84,7 @@ public final class RequestHandler implements Runnable{
                         Scanner readFile = new Scanner(downFile);
                         String line;
                         while ((line = readFile.nextLine()) != null) {
+                            System.out.println(line);
                             requestOutput.writeChars(line + delim);
                         }
 
