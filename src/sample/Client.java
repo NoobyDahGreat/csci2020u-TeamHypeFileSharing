@@ -73,7 +73,6 @@ public class Client extends Application {
         clientList.setPrefHeight(400);
         summary.add(clientList, 0, 1);
 
-        String item = clientList.getSelectionModel().getSelectedItem();
 
         serverList = new ListView();
         ObservableList<String> serverItems = serverItems(requestSender);
@@ -87,6 +86,8 @@ public class Client extends Application {
         download.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String item = serverList.getSelectionModel().getSelectedItem();
+
                 System.out.println(item);
                 requestSender.download(item);
                 ObservableList<String> items = clientItems(sharedDirectory);
@@ -103,7 +104,9 @@ public class Client extends Application {
             @Override
 
             public void handle(ActionEvent event) {
-                requestSender.upload("./client/get_this_you_shit.txt");
+                String item = clientList.getSelectionModel().getSelectedItem();
+
+                requestSender.upload(item);
                 ObservableList<String> serverItems = serverItems(requestSender);
 
                 serverList.setItems(serverItems);
