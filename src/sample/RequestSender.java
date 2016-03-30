@@ -101,7 +101,7 @@ public class RequestSender {
         }
     }
 
-    public ObservableList dir() {
+    public ObservableList<String> dir() {
         try {
             // send the HTTP request GET /yahoo/yahoo.html HTTP/1.0\n\n
             String request = "DIR";
