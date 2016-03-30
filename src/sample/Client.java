@@ -89,7 +89,8 @@ public class Client extends Application {
                 String item = serverList.getSelectionModel().getSelectedItem();
 
                 System.out.println(item);
-                requestSender.download(item);
+                RequestSender download = new RequestSender("127.0.0.1", 8081, sharedDir);
+                download.download("assign3_commands.txt");
                 ObservableList<String> items = clientItems(sharedDirectory);
 
                 clientList.setItems(items);
@@ -106,7 +107,8 @@ public class Client extends Application {
             public void handle(ActionEvent event) {
                 String item = clientList.getSelectionModel().getSelectedItem();
 
-                requestSender.upload(item);
+                RequestSender upload = new RequestSender("127.0.0.1", 8081, sharedDir);
+                upload.upload(item);
                 ObservableList<String> serverItems = serverItems(requestSender);
 
                 serverList.setItems(serverItems);
