@@ -6,8 +6,8 @@ INSTRUCTIONS
 3. open IDEA IntelliJ
 4. File > Open > (name of extracted folder)
 5. open run/debug confirguration to make debug run from sample.server and sample.cleint
-6. sample.server
-7. sample.cleint
+6. run sample.server
+7. run sample.cleint
 
 ADDITIONAL FEATURES
 We added a GUI for getting the hostname and location of shared folder instead of command line arguments.
