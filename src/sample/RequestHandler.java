@@ -45,7 +45,9 @@ public final class RequestHandler implements Runnable{
     }
 
     private void handleRequest(String mainRequestLine) throws IOException {
+        System.out.println(mainRequestLine);
         if (mainRequestLine.contains("DIR")) {
+            System.out.println("DIR is in");
             if (folder.isDirectory()) {
                 File[] listOfFiles = folder.listFiles();
                 for (int i = 0; i < listOfFiles.length; i++) {
@@ -57,39 +59,42 @@ public final class RequestHandler implements Runnable{
                 requestInput.close();
                 requestOutput.close();
             }
-        } else if (mainRequestLine.substring(0,5) == "UPLOAD") {
-            File upFile = new File(mainRequestLine.substring(7));
-            if (!upFile.exists()) {
-                FileWriter newFile = new FileWriter(upFile);
-                String line;
-                while ((line = requestInput.readLine()) != null) {
-                    newFile.write(line + "/n");
+        } else if (mainRequestLine.contains("UPLOAD")) {
+            if (mainRequestLine.substring(0,5) == "UPLOAD") {
+                File upFile = new File(mainRequestLine.substring(7));
+                if (!upFile.exists()) {
+                    FileWriter newFile = new FileWriter(upFile);
+                    String line;
+                    while ((line = requestInput.readLine()) != null) {
+                        newFile.write(line + "/n");
+                    }
+
+                    newFile.flush();
+                    newFile.close();
+
+                    requestOutput.flush();
+
+                    requestInput.close();
+                    requestOutput.close();
                 }
-
-                newFile.flush();
-                newFile.close();
-
-                requestOutput.flush();
-
-                requestInput.close();
-                requestOutput.close();
             }
+        } else if (mainRequestLine.contains("DOWNLOAD")) {
+            if (mainRequestLine.substring(0,7) == "DOWNLOAD") {
+                File downFile = new File(mainRequestLine.substring(9));
+                if (downFile.exists()) {
+                    Scanner readFile = new Scanner(downFile);
+                    String line;
+                    while ((line = readFile.nextLine()) != null) {
+                        requestOutput.writeChars(line + delim);
+                    }
 
-        } else if (mainRequestLine.substring(0,7) == "DOWNLOAD") {
-            File downFile = new File(mainRequestLine.substring(9));
-            if (downFile.exists()) {
-                Scanner readFile = new Scanner(downFile);
-                String line;
-                while ((line = readFile.nextLine()) != null) {
-                    requestOutput.writeChars(line + delim);
+                    readFile.close();
+
+                    requestOutput.flush();
+
+                    requestInput.close();
+                    requestOutput.close();
                 }
-
-                readFile.close();
-
-                requestOutput.flush();
-
-                requestInput.close();
-                requestOutput.close();
             }
         }
     }

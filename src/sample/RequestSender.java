@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.*;
@@ -14,7 +15,7 @@ public class RequestSender {
     private String hostName;
     private int portNumber;
     private BufferedReader in;
-    private DataOutputStream out;
+    private PrintWriter out;
     private String request;
     private String localDir;
     private ObservableList<String> fileList;
@@ -23,11 +24,12 @@ public class RequestSender {
         this.hostName = hostName;
         this.portNumber = portNumber;
         this.localDir = localDir;
+        fileList = FXCollections.observableArrayList();
 
         try {
             socket = new Socket(this.hostName, this.portNumber);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            out = new DataOutputStream(socket.getOutputStream());
+            out = new PrintWriter(socket.getOutputStream());
         } catch (Exception  e) {
             e.printStackTrace();
         }
@@ -42,7 +44,7 @@ public class RequestSender {
 
             request = "DOWNLOAD " + path;
             String delim = "\r\n";
-            out.writeChars(request + delim);
+            out.print(request + delim);
             out.flush();
 
             String response;
@@ -68,14 +70,14 @@ public class RequestSender {
 
             request = "UPLOAD " + file;
             String delim = "\r\n";
-            out.writeChars(request + delim);
+            out.print(request + delim);
             out.flush();
 
             if (temp.exists()) {
                 Scanner readFile = new Scanner(temp);
                 String line;
                 while ((line = readFile.nextLine()) != null) {
-                    out.writeChars(line + delim);
+                    out.print(line + delim);
                 }
 
                 readFile.close();
@@ -96,7 +98,7 @@ public class RequestSender {
             // send the HTTP request GET /yahoo/yahoo.html HTTP/1.0\n\n
             String request = "DIR";
             String delim = "\r\n";
-            out.writeChars(request + delim );
+            out.print(request + delim );
             out.flush();
 
             // read and print the response
@@ -104,6 +106,7 @@ public class RequestSender {
             System.out.println("Response:");
             while ((response = in.readLine()) != null) {
                 fileList.add(response);
+                System.out.println(response);
             }
 
             // close the connection (3-way tear down handshake)
