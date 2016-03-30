@@ -66,16 +66,7 @@ public class Client extends Application {
         summary.setHgap(3);
 
         clientList = new ListView();
-        ObservableList<String> items = FXCollections.observableArrayList();
-        File[] list = sharedDirectory.listFiles();
-
-        for(int i =0; i < list.length; i++){
-            if(list[i].isFile()){
-                if(list[i].getName().endsWith(".txt")){
-                    items.add(list[i].getName());
-                }
-            }
-        }
+        ObservableList<String> items = clientItems(sharedDirectory);
 
         clientList.setItems(items);
         clientList.setPrefWidth(200);
@@ -85,9 +76,9 @@ public class Client extends Application {
         String item = clientList.getSelectionModel().getSelectedItem();
 
         serverList = new ListView();
-        ObservableList<String> serverItems = requestSender.dir();
+        ObservableList<String> serverItems = serverItems(requestSender);
 
-        serverList.setItems(null);
+        serverList.setItems(serverItems);
         serverList.setPrefHeight(400);
         serverList.setPrefWidth(200);
         summary.add(serverList, 1, 1);
@@ -98,6 +89,11 @@ public class Client extends Application {
             public void handle(ActionEvent event) {
                 System.out.println(item);
                 requestSender.download(item);
+                ObservableList<String> items = clientItems(sharedDirectory);
+
+                clientList.setItems(items);
+
+
             }
         });
         summary.add(download, 0, 0);
@@ -105,9 +101,15 @@ public class Client extends Application {
         upload = new Button("Upload");
         upload.setOnAction(new EventHandler<ActionEvent>() {
             @Override
+
             public void handle(ActionEvent event) {
                 requestSender.upload("./shared_files/aaignn3_commands.txt");
+                ObservableList<String> serverItems = serverItems(requestSender);
+
+                serverList.setItems(serverItems);
+
             }
+
         });
         summary.add(upload, 1, 0);
 
@@ -130,6 +132,25 @@ public class Client extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    public ObservableList<String> clientItems(File sharedDirectory){
+        ObservableList<String> items = FXCollections.observableArrayList();
+        File[] list = sharedDirectory.listFiles();
+
+        for(int i =0; i < list.length; i++){
+            if(list[i].isFile()){
+                if(list[i].getName().endsWith(".txt")){
+                    items.add(list[i].getName());
+                }
+            }
+        }
+        return items;
+    }
+
+    public ObservableList<String> serverItems(RequestSender requestSender){
+        ObservableList<String> serverItems = requestSender.dir();
+        return serverItems;
     }
 
     public static void main(String[] args) {
