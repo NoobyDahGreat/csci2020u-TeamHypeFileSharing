@@ -57,8 +57,7 @@ public final class RequestHandler implements Runnable{
 
                     requestOutput.flush();
 
-                    requestInput.close();
-                    requestOutput.close();
+
                 }
             } else if (mainRequestLine.contains("UPLOAD")) {
                 if (mainRequestLine.substring(0, 5) == "UPLOAD") {
@@ -75,9 +74,6 @@ public final class RequestHandler implements Runnable{
                         newFile.close();
 
                         requestOutput.flush();
-
-                        requestInput.close();
-                        requestOutput.close();
                     }
                 }
             } else if (mainRequestLine.contains("DOWNLOAD")) {
@@ -93,9 +89,6 @@ public final class RequestHandler implements Runnable{
                         readFile.close();
 
                         requestOutput.flush();
-
-                        requestInput.close();
-                        requestOutput.close();
                     }
                 }
             }

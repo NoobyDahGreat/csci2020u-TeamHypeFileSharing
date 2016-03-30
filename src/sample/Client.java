@@ -106,7 +106,7 @@ public class Client extends Application {
         upload.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                requestSender.upload("./shared_files/aaignn3_commands.txt");
+                requestSender.upload("./client/get_this_you_shit.txt");
             }
         });
         summary.add(upload, 1, 0);

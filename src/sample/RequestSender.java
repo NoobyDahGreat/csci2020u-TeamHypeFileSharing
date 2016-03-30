@@ -56,6 +56,8 @@ public class RequestSender {
                 transfer.newLine();
             }
             transfer.close();
+            socket.close();
+
 
         } catch (IOException e) {
             System.out.println(e);
@@ -75,9 +77,13 @@ public class RequestSender {
 
             if (temp.exists()) {
                 Scanner readFile = new Scanner(temp);
+                System.out.println(readFile.next());
                 String line;
-                while ((line = readFile.nextLine()) != null) {
+                while (readFile.hasNextLine()) {
+                    line = readFile.nextLine();
+                    System.out.println(line);
                     out.print(line + delim);
+                    out.flush();
                 }
 
                 readFile.close();
@@ -86,6 +92,8 @@ public class RequestSender {
 
                 in.close();
                 out.close();
+                socket.close();
+
             }
         } catch (IOException e) {
             System.out.println(e);
